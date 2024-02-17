@@ -1,7 +1,6 @@
 library dart_mmd;
 
 import 'dart:typed_data';
-import 'package:dart_mmd/utils/textbuf.dart';
 import 'package:dart_mmd/utils/buffer_reader.dart';
 
 /// Represents a PMX bone.
@@ -12,10 +11,10 @@ import 'package:dart_mmd/utils/buffer_reader.dart';
 /// Source: https://github.com/kanryu/pmx/blob/master/pmx.ts#L302
 class PMXBone {
   /// The name of the bone.
-  late TextBuf name;
+  late String name;
 
   /// The English name of the bone.
-  late TextBuf englishName;
+  late String englishName;
 
   /// The position of the bone.
   late final Float32List position;
@@ -78,11 +77,9 @@ class PMXBone {
   /// The [boneSize] parameter specifies the size of the bone.
   PMXBone(BufferReader reader, String encoding, int boneSize) {
     //4 + n : TextBuf	| Bone name
-    name = value["name"] =
-        TextBuf(boneSize, reader.readTextBuffer(encoding).toString());
+    name = value["name"] = reader.readTextBuffer(encoding).toString();
     //4 + n : TextBuf	| Bone English name
-    englishName = value["name_en"] =
-        TextBuf(boneSize, reader.readTextBuffer(encoding).toString());
+    englishName = value["name_en"] = reader.readTextBuffer(encoding).toString();
     //12 : float3	| Position
     position = value["position"] = reader.readFloat3();
     //4  : int		| Deformation Hierarchy

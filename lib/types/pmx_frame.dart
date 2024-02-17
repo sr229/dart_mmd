@@ -1,7 +1,6 @@
 library dart_mmd;
 
 import 'package:dart_mmd/utils/buffer_reader.dart';
-import 'package:dart_mmd/utils/textbuf.dart';
 
 /// Represents a PMX frame.
 ///
@@ -11,10 +10,10 @@ import 'package:dart_mmd/utils/textbuf.dart';
 /// Source: https://github.com/kanryu/pmx/blob/master/pmx.ts#L526
 class PMXFrame {
     /// The name of the frame.
-    late TextBuf name;
+    late String name;
 
     /// The English name of the frame.
-    late TextBuf englishName;
+    late String englishName;
 
     /// The flag of the frame.
     late int flag;
@@ -34,12 +33,9 @@ class PMXFrame {
   /// The [morphSize] parameter specifies the size of the morph index.
   PMXFrame(BufferReader reader, String encoding, int boneSize, int morphSize) {
     // 4 + n : TextBuf	| Frame name
-    name = value['name'] = TextBuf(reader.readTextBuffer(encoding).length,
-        reader.readTextBuffer(encoding).toString());
+    name = value['name'] = reader.readTextBuffer(encoding).toString();
     // 4 + n : TextBuf	| English frame name
-    englishName = value['english_name'] = TextBuf(
-        reader.readTextBuffer(encoding).length,
-        reader.readTextBuffer(encoding).toString());
+    englishName = value['english_name'] = reader.readTextBuffer(encoding).toString();
     // 1  : byte	| Special frame flag - 0: Normal frame 1: Special frame
     flag = value['flag'] = reader.readByte();
     innerCount = value['inner_count'] = reader.readInt();

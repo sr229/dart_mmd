@@ -1,7 +1,6 @@
 library dart_mmd;
 
 import 'dart:typed_data';
-import 'package:dart_mmd/utils/textbuf.dart';
 import 'package:dart_mmd/utils/buffer_reader.dart';
 
 /// Represents a Material in a PMX model.
@@ -11,10 +10,10 @@ import 'package:dart_mmd/utils/buffer_reader.dart';
 /// Source: https://github.com/kanryu/pmx/blob/master/pmx.ts#L240
 class PMXMaterial {
   /// The name of the material.
-  late final TextBuf name;
+  late final String name;
 
   /// The English name of the material.
-  late final TextBuf englishName;
+  late final String englishName;
 
   /// The diffuse color of the material.
   late final Float32List diffuse;
@@ -53,7 +52,7 @@ class PMXMaterial {
   late final int toon;
 
   /// A memo for the material.
-  late final TextBuf memo;
+  late final String memo;
 
   /// The number of vertices that reference this material.
   late final int refsVertex;
@@ -67,10 +66,8 @@ class PMXMaterial {
   /// The [encoding] specifies the character encoding used in the PMX file.
   /// The [textureIndexSize] specifies the size of the texture index in bytes.
   PMXMaterial(BufferReader reader, String encoding, int textureIndexSize) {
-    name = value['name'] =
-        TextBuf(reader.readInt(), reader.readTextBuffer(encoding).toString());
-    englishName = value['name_en'] =
-        TextBuf(reader.readInt(), reader.readTextBuffer(encoding).toString());
+    name = value['name'] = reader.readTextBuffer(encoding).toString();
+    englishName = value['name_en'] = reader.readTextBuffer(encoding).toString();
     diffuse = value['diffuse'] = reader.readFloat4();
     specular = value['specular'] = reader.readFloat3();
     specularMod = value['specular_mod'] = reader.readFloat();
@@ -78,17 +75,14 @@ class PMXMaterial {
     bitFlag = value['bit_flag'] = reader.readInt();
     edgeColor = value['edge_color'] = reader.readFloat4();
     edgeSize = value['edge_size'] = reader.readFloat();
-    textureIndex =
-        value['textureIdx'] = reader.readSizedIdx(textureIndexSize);
-    sphereIndex =
-        value['sphereIdx'] = reader.readSizedIdx(textureIndexSize);
+    textureIndex = value['textureIdx'] = reader.readSizedIdx(textureIndexSize);
+    sphereIndex = value['sphereIdx'] = reader.readSizedIdx(textureIndexSize);
     sphereMode = value['sphere_mode'] = reader.readByte();
     sharedToon = value['shared_toon'] = reader.readByte();
     toon = value['toon'] = sharedToon != 0
         ? reader.readByte()
         : reader.readSizedIdx(textureIndexSize);
-    memo = value['memo'] =
-        TextBuf(reader.readInt(), reader.readTextBuffer(encoding).toString());
+    memo = value['memo'] = reader.readTextBuffer(encoding).toString();
     refsVertex = value['refs_vertex'] = reader.readInt();
   }
 }
