@@ -3,7 +3,7 @@ library dart_mmd;
 import 'dart:typed_data';
 import 'package:dart_mmd/utils/buffer_reader.dart';
 
-/// Represents a PMX bone.
+/// Represents a Polygon Model eXtended bone.
 ///
 /// Source: https://gist.github.com/felixjones/5f4479c9c9d1682b2f3a
 ///

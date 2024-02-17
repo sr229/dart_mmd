@@ -2,7 +2,7 @@ library dart_mmd;
 
 import 'package:dart_mmd/utils/buffer_reader.dart';
 
-/// Represents a PMX frame.
+/// Represents a Polygon Model eXtended frame.
 ///
 /// Source: https://gist.github.com/felixjones/5f4479c9c9d1682b2f3a
 ///
