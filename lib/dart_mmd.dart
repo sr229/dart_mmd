@@ -1,8 +1,17 @@
 library dart_mmd;
 
+import 'dart:typed_data';
+
+import 'package:dart_mmd/pmx.dart';
+
 class PMXParser {
-    static void parse(String path) {
-       // TODO: implement the loader
-       throw UnimplementedError();
+  static PMX parse(
+      ByteBuffer buffer, Function(Error err, dynamic data) callback) {
+    var model = new PMX(buffer, callback);
+
+    if (callback != null) {
+      callback(Error(), model.value);
     }
+    return model;
+  }
 }
