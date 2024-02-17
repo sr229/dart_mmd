@@ -12,10 +12,31 @@ import 'package:dart_mmd/types/pmx/pmx_rigidbody.dart';
 import 'package:dart_mmd/types/pmx/pmx_vertex.dart';
 import 'package:dart_mmd/utils/buffer_reader.dart';
 
+/// Represents a Polygon Model eXtended model.
+///
+/// The [PMX] class is responsible for parsing and storing the data of a PMX model file.
+/// It provides methods to access and manipulate the model's vertices, faces, textures, materials, bones, morphs, frames, rigid bodies, and joints.
+///
+/// Example usage:
+/// ```dart
+/// var buffer = ...; // Provide the PMX model file buffer
+/// var model = PMX(buffer, (err, data) {
+///   if (err != null) {
+///     // Handle error
+///   } else {
+///     // Access and manipulate the model data
+///   }
+/// });
+/// ```
 class PMX {
   late final List<dynamic> log;
   late final Map<String, dynamic> value;
 
+  /// Creates a new instance of the [PMX] class.
+  ///
+  /// The [buffer] parameter is the byte buffer containing the PMX model data.
+  /// The [callback] parameter is a function that will be called when the model data is parsed.
+  /// It takes an [Error] object as the first parameter (or `null` if no error occurred) and the parsed model data as the second parameter.
   PMX(ByteBuffer buffer, Function(Error err, dynamic data) callback) {
     push(buffer.toString());
 
