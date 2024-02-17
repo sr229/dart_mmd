@@ -1,5 +1,8 @@
 library dart_mmd;
 
-int calculate() {
-  return 6 * 7;
+class PMXParser {
+    static void parse(String path) {
+       // TODO: implement the loader
+       throw UnimplementedError();
+    }
 }

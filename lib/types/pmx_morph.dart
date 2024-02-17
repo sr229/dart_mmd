@@ -10,36 +10,36 @@ import 'package:dart_mmd/utils/buffer_reader.dart';
 /// This is originally ported from a TypeScript version of the library.
 /// Source: https://github.com/kanryu/pmx/blob/master/pmx.ts#L413
 class PMXMorph {
-  late String name;
-  late String englishName;
-  late int panel;
-  late int morphType;
-  late int offsetSize;
-  late Map<String, dynamic> value;
+  late final String name;
+  late final String englishName;
+  late final int panel;
+  late final int morphType;
+  late final int offsetSize;
+  late final Map<String, dynamic> value;
 
-  late int morphIndex;
-  late double morphRate;
-  late int vertexIndex;
-  late Float32List coordinateOffset;
+  late final int morphIndex;
+  late final double morphRate;
+  late final int vertexIndex;
+  late final Float32List coordinateOffset;
 
-  late int boneIndex;
-  late Float32List boneDistance;
-  late List<double> boneRotation;
+  late final int boneIndex;
+  late final Float32List boneDistance;
+  late final List<double> boneRotation;
 
-  late Float32List uvOffset;
+  late final Float32List uvOffset;
 
-  late int materialIndex;
-  late int materialOffsetType;
-  late List<double> materialDiffuse;
-  late List<double> materialSpecular;
-  late double materialSpecularPower;
-  late List<double> materialAmbient;
-  late List<double> materialEdgeColor;
-  late double materialEdgeSize;
-  late List<double> materialTexture;
-  late List<double> materialSphere;
-  late List<double> materialToon;
-  late List<dynamic> offsetData;
+  late final int materialIndex;
+  late final int materialOffsetType;
+  late final List<double> materialDiffuse;
+  late final List<double> materialSpecular;
+  late final double materialSpecularPower;
+  late final List<double> materialAmbient;
+  late final List<double> materialEdgeColor;
+  late final double materialEdgeSize;
+  late final List<double> materialTexture;
+  late final List<double> materialSphere;
+  late final List<double> materialToon;
+  late final List<dynamic> offsetData;
 
   /// Constructs a PMXMorph object.
   ///
