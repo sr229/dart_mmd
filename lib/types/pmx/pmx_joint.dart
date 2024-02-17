@@ -10,8 +10,6 @@ import 'package:dart_mmd/utils/buffer_reader.dart';
 ///
 /// This is originally ported from a TypeScript version of the library.
 /// Source: https://github.com/kanryu/pmx/blob/master/pmx.ts#L619
-///
-// Before you all make blunt jokes about the name, I'm just going to say that I didn't come up with it.
 class PMXJoint {
   /// The name of the joint.
   late final String name;

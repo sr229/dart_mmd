@@ -132,8 +132,6 @@ class PMXVertex {
         throw Exception('Invalid vertex type: $type');
     }
 
-    // this is originally number in the TypeScript reference
-    // But you know what, fuck it, it's a double now :kekw:
-    edge = value['edge'] = reader.readFloat4() as double;
+    edge = value['edge'] = reader.readFloat();
   }
 }
