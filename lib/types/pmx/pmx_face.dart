@@ -14,6 +14,7 @@ class PMXFace {
   /// The [vertexSize] parameter determines the size of each vertex value.
   /// Throws an [Exception] if the [vertexSize] is invalid.
   PMXFace(BufferReader reader, int vertexSize) {
+    // n: Vertex Index Size | Reference Index of Vertex
     switch (vertexSize) {
       case 1:
         value = reader.readByteArray(3);
