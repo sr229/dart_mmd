@@ -78,17 +78,17 @@ class PMXRigidBody {
     group = value["group"] = reader.readByte();
     // 2 : ushort | Non-collision group flag
     collisionGroup = value["group"] = reader.readInt();
-    // 1 : byte | Shape - 0: Sphere, 1: Box, 2: Capsule
+    // 2 : ushort | Non-collision group flag
     noCollisionGroup = value["no_collision_group"] = reader.readSizedIdx(2);
-    // 12 : float3 | Size (x, y, z)
+    // 1 : byte | Shape - 0: Sphere, 1: Box, 2: Capsule
     shape = value["figure"] = reader.readByte();
-    // 12 : float3 | Position (x, y, z)
+    // 12 : float | Size
     size = value["size"] = reader.readFloat();
-    // 12 : float3 | Rotation (x, y, z) -> Radian angle
+    // 12 : float3 | Position (x, y, z)
     position = value["position"] = reader.readFloat3();
-    // 4 : float | Mass
+    // 12 : float3 | Rotation (x, y, z) -> Radian angle
     rotation = value["rad"] = reader.readFloat3();
-    // 4 : float | Moving attenuation
+    // 4 : float | Mass
     mass = value["mass"] = reader.readFloat();
     // 4 : float | Moving attenuation
     movingAtt = value["moving_att"] = reader.readFloat();
