@@ -9,43 +9,43 @@ import 'package:utf_convert/utf_convert.dart';
 ///
 /// Source: https://github.com/kanryu/pmx/blob/master/pmx.ts
 class BufferReader {
-  List<int> posStack = [0];
-  late Uint8List binaryData;
+  final List<int> _posStack = [0];
+  late final Uint8List binaryData;
 
   /// Create a new BufferReader from a ByteBuffer.
   /// [buffer] is the buffer to read from.
   /// [pos] is the initial position to start reading from.
   BufferReader(ByteBuffer buffer, [int pos = 0]) {
     binaryData = buffer.asUint8List();
-    posStack.insert(0, pos);
+    _posStack.insert(0, pos);
   }
 
   /// Push a new position onto the stack.
   /// [pos] is the position to push.
   void pushPos(int pos) {
-    posStack.insert(0, pos);
+    _posStack.insert(0, pos);
   }
 
   /// Pop a position from the stack.
   int popPos() {
-    return posStack.removeAt(0);
+    return _posStack.removeAt(0);
   }
 
   /// Get the current position.
   int pos() {
-    return posStack[0];
+    return _posStack[0];
   }
 
   /// Move the current position ahead by [size].
   int ahead(int size) {
-    var result = posStack[0];
-    posStack[0] += size;
+    var result = _posStack[0];
+    _posStack[0] += size;
     return result;
   }
 
   /// Read a byte from the buffer.
   int readByte() {
-    return binaryData[posStack[0]++];
+    return binaryData[_posStack[0]++];
   }
 
   /// Read a short from the buffer.
@@ -102,7 +102,7 @@ class BufferReader {
         ? decodeUtf16le(binaryData, pos(), length)
         : decodeUtf8(binaryData, pos(), length);
 
-    posStack[0] += length;
+    _posStack[0] += length;
 
     return decoded;
   }
