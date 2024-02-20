@@ -76,11 +76,11 @@ class PMX {
     var commentEnglish = reader.readTextBuffer(encoding);
     var vertexLength = reader.readInt();
 
-    push("modelname", value: model);
-    push("modelname_en", value: modelEnglish);
-    push("comment", value: comment);
-    push("comment_en", value: commentEnglish);
-    push("VertexLen", value: vertexLength);
+    push("modelname", val: model);
+    push("modelname_en", val: modelEnglish);
+    push("comment", val: comment);
+    push("comment_en", val: commentEnglish);
+    push("VertexLen", val: vertexLength);
 
     // vertices
     var vertices = [];
@@ -88,17 +88,17 @@ class PMX {
       var vertex = PMXVertex(reader, additionalUV, boneIndexSize);
       vertices.add(vertex);
     }
-    push("vertex", value: vertices);
+    push("vertex", val: vertices);
 
     // faces
     var faceLength = reader.readInt();
     var faces = [];
-    push("face", value: faceLength);
+    push("face", val: faceLength);
     for (var i = 0; i < faceLength / 3; i++) {
       var face = PMXFace(reader, vertexIndexSize);
       faces.add(face);
     }
-    push("face", value: faces);
+    push("face", val: faces);
 
     // materials
     var materialLength = reader.readInt();
@@ -108,7 +108,7 @@ class PMX {
       var m = material.value;
       materials.add(m);
     }
-    push("material", value: materials);
+    push("material", val: materials);
 
     // bones
     var boneLength = reader.readInt();
@@ -157,14 +157,14 @@ class PMX {
     }
   }
 
-  void push(dynamic key, {dynamic value, bool assigned = true}) {
-    if (value == null) {
-      log.add(value);
+  void push(dynamic key, {dynamic val, bool assigned = true}) {
+    if (val == null) {
+      log.add(val);
     } else {
       if (assigned)  {
-        this.value[key] = value;
+        value[key] = val;
       }
-      log.add([key, value]);
+      log.add([key, val]);
     }
   }
 }

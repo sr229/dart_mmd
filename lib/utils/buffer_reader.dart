@@ -10,13 +10,13 @@ import 'package:utf_convert/utf_convert.dart';
 /// Source: https://github.com/kanryu/pmx/blob/master/pmx.ts
 class BufferReader {
   List<int> posStack = [0];
-  late ByteBuffer binaryData;
+  late Uint8List binaryData;
 
   /// Create a new BufferReader from a ByteBuffer.
   /// [buffer] is the buffer to read from.
   /// [pos] is the initial position to start reading from.
   BufferReader(ByteBuffer buffer, [int pos = 0]) {
-    binaryData = buffer;
+    binaryData = buffer.asUint8List();
     posStack.insert(0, pos);
   }
 
@@ -45,22 +45,22 @@ class BufferReader {
 
   /// Read a byte from the buffer.
   int readByte() {
-    return ByteData.view(binaryData).getInt8(ahead(1));
+    return binaryData[posStack[0]++];
   }
 
   /// Read a short from the buffer.
   int readShort() {
-    return ByteData.view(binaryData).getInt16(ahead(2), Endian.little);
+    return ByteData.view(binaryData.buffer).getInt16(ahead(2), Endian.little);
   }
 
   /// Read an integer from the buffer.
   int readInt() {
-    return ByteData.view(binaryData).getInt32(ahead(4), Endian.little);
+    return ByteData.view(binaryData.buffer).getInt32(ahead(4), Endian.little);
   }
 
   /// Read a float from the buffer.
   double readFloat() {
-    return ByteData.view(binaryData).getFloat32(ahead(4), Endian.little);
+    return ByteData.view(binaryData.buffer).getFloat32(ahead(4), Endian.little);
   }
 
   /// Reads a float array from the buffer.
@@ -96,23 +96,15 @@ class BufferReader {
   /// The [encoding] parameter specifies the character encoding to use when decoding the text buffer.
   ///
   String readTextBuffer(String encoding) {
-    try {
-      var length = readInt();
-      var buffer = encoding != 'utf-8'
-          ? binaryData.asUint16List()
-          : binaryData.asUint8List();
+    var length = readInt();
 
-      var decoded = encoding != 'utf-8'
-          ? decodeUtf16le(buffer, pos(), length)
-          : decodeUtf8(buffer, pos(), length);
-      
-      posStack[0] += length;
+    var decoded = encoding != 'utf-8'
+        ? decodeUtf16le(binaryData, pos(), length)
+        : decodeUtf8(binaryData, pos(), length);
 
-      return decoded;
-    } catch (e) {
-      print('Warning: Unable to parse text buffer: $e. Encoding $encoding at position $posStack in $binaryData. Ignoring.');
-      return '';
-    }
+    posStack[0] += length;
+
+    return decoded;
   }
 
   /// Reads a byte array of the specified length from the buffer.
