@@ -51,7 +51,7 @@ class PMXJoint {
   late final Float32List bounceRotation;
 
   /// K/V data for the joint. Used internally.
-  late final Map<String, dynamic> value;
+  final Map<String, dynamic> value = {};
 
   /// Constructs a PMXJoint object from the given [reader].
   ///

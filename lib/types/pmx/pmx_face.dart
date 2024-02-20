@@ -6,7 +6,7 @@ import 'package:dart_mmd/utils/buffer_reader.dart';
 /// 
 /// Source: https://gist.github.com/felixjones/5f4479c9c9d1682b2f3a
 class PMXFace {
-  late final List<int> value;
+  List<int> value = [];
 
   /// Constructs a PMXFace object.
   ///

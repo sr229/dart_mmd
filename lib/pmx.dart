@@ -29,8 +29,8 @@ import 'package:dart_mmd/utils/buffer_reader.dart';
 /// });
 /// ```
 class PMX {
-  late final List<dynamic> log;
-  late final Map<String, dynamic> value;
+  List<dynamic> log = [];
+  Map<String, dynamic> value = {};
 
   /// Creates a new instance of the [PMX] class.
   ///
@@ -168,10 +168,12 @@ class PMX {
   }
 
   void push(dynamic key, {dynamic value, bool assigned = true}) {
-    if (!value) {
+    if (value == null) {
       log.add(value);
     } else {
-      if (assigned) value[key] = value;
+      if (assigned)  {
+        this.value[key] = value;
+      }
       log.add([key, value]);
     }
   }

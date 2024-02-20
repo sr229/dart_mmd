@@ -13,7 +13,7 @@ class BufferReader {
   /// Create a new BufferReader from a ByteBuffer.
   /// [buffer] is the buffer to read from.
   /// [pos] is the initial position to start reading from.
-  BufferReader(ByteBuffer buffer, int pos) {
+  BufferReader(ByteBuffer buffer, [int pos = 0]) {
     binaryData = buffer;
     posStack.insert(0, pos);
   }
@@ -36,7 +36,9 @@ class BufferReader {
 
   /// Move the current position ahead by [size].
   int ahead(int size) {
-    return posStack[0] += size;
+    var result = posStack[0];
+    posStack[0] += size;
+    return result;
   }
 
   /// Read a byte from the buffer.
@@ -91,14 +93,23 @@ class BufferReader {
   ///
   /// The [encoding] parameter specifies the character encoding to use when decoding the text buffer.
   ///
-  /// Returns a [Uint8List] containing the read text buffer.
-  Uint8List readTextBuffer(String encoding) {
+  String readTextBuffer(String encoding) {
     var length = readInt();
-    var buffer = Uint8List(length);
-    for (var i = 0; i < length; i++) {
-      buffer[i] = readByte();
+
+    if (encoding == 'utf-8') {
+      var buffer = Uint8List(length);
+      for (var i = 0; i < length; i++) {
+        buffer[i] = readByte();
+      }
+      // return the resulting text
+      return buffer;
+    } else {
+      var buffer = Uint16List(length);
+      for (var i = 0; i < length; i++) {
+        buffer[i] = readShort();
+      }
+      return buffer;
     }
-    return buffer;
   }
 
   /// Reads a byte array of the specified length from the buffer.
@@ -114,7 +125,7 @@ class BufferReader {
   }
 
   /// Reads an array of 16-bit integers from the buffer.
-  /// 
+  ///
   /// The [length] parameter specifies the number of elements to read.
   /// Returns a list of integers with the specified length.
   List<int> readShortArray(int length) {
@@ -126,7 +137,7 @@ class BufferReader {
   }
 
   /// Reads an array of 32-bit integers from the buffer.
-  /// 
+  ///
   /// The [length] parameter specifies the number of elements to read.
   /// Returns a list of integers with the specified length.
   List<int> readIntArray(int length) {
@@ -138,7 +149,7 @@ class BufferReader {
   }
 
   /// Reads an index value of the specified [size] from the buffer.
-  /// 
+  ///
   /// The [size] parameter specifies the size of the index value in bytes.
   /// The [signed] parameter indicates whether the index value is signed or not.
   /// Returns the read index value. If [signed] is true and the read value is the maximum value for the specified size, -1 is returned.
@@ -147,19 +158,19 @@ class BufferReader {
     switch (size) {
       case 1:
         result = readByte();
-        if (signed && result == 0xFF) result = -1;
+        if (signed && result == 0xff) result = -1;
         break;
       case 2:
         result = readShort();
-        if (signed && result == 0xFFFF) result = -1;
+        if (signed && result == 0xffff) result = -1;
         break;
       case 4:
         result = readInt();
-        if (signed && result == 0xFFFFFFFF) result = -1;
+        if (signed && result == 0xffffffff) result = -1;
         break;
       default:
         throw Exception('Invalid index size: $size');
     }
-    throw Exception('Invalid index size: $size'); // Added throw statement
+    return result;
   }
 }

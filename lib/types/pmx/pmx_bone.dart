@@ -68,7 +68,7 @@ class PMXBone {
   late final List<dynamic> ikLinks;
 
   /// The value of the bone.
-  late final Map<String, dynamic> value;
+  final Map<String, dynamic> value = {};
 
   /// Constructs a PMXBone object.
   ///
