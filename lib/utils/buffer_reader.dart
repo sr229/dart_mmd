@@ -95,21 +95,11 @@ class BufferReader {
   ///
   String readTextBuffer(String encoding) {
     var length = readInt();
+    var text = encoding != 'utf-8' ? binaryData.asUint16List(pos() ~/ Uint16List.bytesPerElement, pos() + length) : binaryData.asUint8List(pos(), pos() + length);
 
-    if (encoding == 'utf-8') {
-      var buffer = Uint8List(length);
-      for (var i = 0; i < length; i++) {
-        buffer[i] = readByte();
-      }
-      // return the resulting text
-      return buffer;
-    } else {
-      var buffer = Uint16List(length);
-      for (var i = 0; i < length; i++) {
-        buffer[i] = readShort();
-      }
-      return buffer;
-    }
+    posStack[0] += length;
+
+    return String.fromCharCodes(text);
   }
 
   /// Reads a byte array of the specified length from the buffer.
