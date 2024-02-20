@@ -100,16 +100,6 @@ class PMX {
     }
     push("face", value: faces);
 
-    // textures
-    var textureLength = reader.readInt();
-    var textures = [];
-    for (var i = 0; i < textureLength; i++) {
-      // 4 + n : TextBuf | Texture file name
-      var texture = reader.readTextBuffer(encoding);
-      textures.add(texture);
-    }
-    push("texture", value: textures);
-
     // materials
     var materialLength = reader.readInt();
     var materials = [];
