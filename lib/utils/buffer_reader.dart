@@ -36,7 +36,9 @@ class BufferReader {
 
   /// Move the current position ahead by [size].
   int ahead(int size) {
-    return posStack[0] += size;
+    var result = posStack[0];
+    posStack[0] += size;
+    return result;
   }
 
   /// Read a byte from the buffer.

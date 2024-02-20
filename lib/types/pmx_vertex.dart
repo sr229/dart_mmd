@@ -43,7 +43,7 @@ class PMXVertex {
   late final double edge;
 
   /// K/V data for the vertex. Used internally.
-  late Map<String, dynamic> value;
+  Map<String, dynamic> value = {};
 
   /// Constructs a PMXVertex object from the given [reader], [uvAppend], and [boneSize].
   ///
