@@ -34,7 +34,7 @@ class PMXVertex {
   List<dynamic> bones = [];
 
   /// The weights of the vertex.
-  late final List<double> weights;
+  List<double> weights = [];
 
   /// The SDEF data of the vertex.
   late final List<dynamic> sdef;

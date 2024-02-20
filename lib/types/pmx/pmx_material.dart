@@ -58,7 +58,7 @@ class PMXMaterial {
   late final int refsVertex;
 
   /// Additional dynamic value for the material.
-  Map<String, dynamic> value = {};
+  final Map<String, dynamic> value = {};
 
   /// Constructs a [PMXMaterial] object.
   ///
