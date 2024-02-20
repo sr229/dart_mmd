@@ -110,7 +110,7 @@ class BufferReader {
 
       return decoded;
     } catch (e) {
-      print('Warning: Unable to parse, $e at $encoding, $posStack, $binaryData. Ignoring.');
+      print('Warning: Unable to parse text buffer: $e. Encoding $encoding at position $posStack in $binaryData. Ignoring.');
       return '';
     }
   }
