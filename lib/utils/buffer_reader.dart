@@ -1,6 +1,5 @@
 library dart_mmd;
 
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:utf_convert/utf_convert.dart';
