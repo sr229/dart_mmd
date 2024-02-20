@@ -82,7 +82,7 @@ class PMXMaterial {
     toon = value['toon'] = sharedToon != 0
         ? reader.readByte()
         : reader.readSizedIdx(textureIndexSize);
-    memo = value['memo'] = reader.readTextBuffer(encoding).toString();
+    memo = value['memo'] = reader.readTextBuffer(encoding);
     refsVertex = value['refs_vertex'] = reader.readInt();
   }
 }
