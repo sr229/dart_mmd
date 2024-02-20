@@ -93,14 +93,23 @@ class BufferReader {
   ///
   /// The [encoding] parameter specifies the character encoding to use when decoding the text buffer.
   ///
-  readTextBuffer(String encoding) {
+  String readTextBuffer(String encoding) {
     var length = readInt();
-    // handle UTF-16 LE encoding (PMX uses UTF-16 LE)
-    var buffer = encoding != 'utf-16le' ? binaryData.asUint8List(pos(), length) : binaryData.asUint16List(pos(), length);
-    for (var i = 0; i < length; i++) {
-      buffer[i] = readByte();
+
+    if (encoding == 'utf-8') {
+      var buffer = Uint8List(length);
+      for (var i = 0; i < length; i++) {
+        buffer[i] = readByte();
+      }
+      // return the resulting text
+      return buffer;
+    } else {
+      var buffer = Uint16List(length);
+      for (var i = 0; i < length; i++) {
+        buffer[i] = readShort();
+      }
+      return buffer;
     }
-    return buffer;
   }
 
   /// Reads a byte array of the specified length from the buffer.
