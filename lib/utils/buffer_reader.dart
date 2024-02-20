@@ -13,7 +13,7 @@ class BufferReader {
   /// Create a new BufferReader from a ByteBuffer.
   /// [buffer] is the buffer to read from.
   /// [pos] is the initial position to start reading from.
-  BufferReader(ByteBuffer buffer, int pos) {
+  BufferReader(ByteBuffer buffer, [int pos = 0]) {
     binaryData = buffer;
     posStack.insert(0, pos);
   }
