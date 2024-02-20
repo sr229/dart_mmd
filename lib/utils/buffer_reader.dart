@@ -1,6 +1,9 @@
 library dart_mmd;
 
+import 'dart:ffi';
 import 'dart:typed_data';
+
+import 'package:utf_convert/utf_convert.dart';
 
 /// BufferReader is a specialised class for reading from a PMX/VMD buffer.
 /// This is originally ported from a TypeScript version of the library.
@@ -95,11 +98,17 @@ class BufferReader {
   ///
   String readTextBuffer(String encoding) {
     var length = readInt();
-    var text = encoding != 'utf-8' ? binaryData.asUint16List(pos() ~/ Uint16List.bytesPerElement, pos() + length) : binaryData.asUint8List(pos(), pos() + length);
+    var buffer = encoding != 'utf-8'
+        ? binaryData.asUint16List()
+        : binaryData.asUint8List();
 
+    var decoded = encoding != 'utf-8'
+        ? decodeUtf16le(buffer, pos(), length)
+        : decodeUtf8(buffer, pos(), length);
+    
     posStack[0] += length;
 
-    return String.fromCharCodes(text);
+    return decoded;
   }
 
   /// Reads a byte array of the specified length from the buffer.
