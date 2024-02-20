@@ -31,7 +31,7 @@ class PMXVertex {
   late final int type;
 
   /// The bones affecting the vertex.
-  late final List<dynamic> bones;
+  List<dynamic> bones = [];
 
   /// The weights of the vertex.
   late final List<double> weights;
@@ -43,7 +43,7 @@ class PMXVertex {
   late final double edge;
 
   /// K/V data for the vertex. Used internally.
-  late Map<String, dynamic> value;
+  Map<String, dynamic> value = {};
 
   /// Constructs a PMXVertex object from the given [reader], [uvAppend], and [boneSize].
   ///

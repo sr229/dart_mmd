@@ -25,7 +25,7 @@ class PMXFrame {
     late List<dynamic> innerData;
 
     /// The value of the frame.
-    late Map<String, dynamic> value;
+    Map<String, dynamic> value = {};
 
   /// Constructs a PMXFrame object by reading data from the provided [reader].
   /// The [encoding] parameter specifies the character encoding used for reading text buffers.

@@ -60,7 +60,7 @@ class PMXRigidBody {
   late final int mode;
 
   /// Additional values associated with the rigid body.
-  late final Map<String, dynamic> value;
+  Map<String, dynamic> value = {};
 
   /// Constructs a PMXRigidBody object by reading data from a BufferReader.
   ///
