@@ -96,18 +96,23 @@ class BufferReader {
   /// The [encoding] parameter specifies the character encoding to use when decoding the text buffer.
   ///
   String readTextBuffer(String encoding) {
-    var length = readInt();
-    var buffer = encoding != 'utf-8'
-        ? binaryData.asUint16List()
-        : binaryData.asUint8List();
+    try {
+      var length = readInt();
+      var buffer = encoding != 'utf-8'
+          ? binaryData.asUint16List()
+          : binaryData.asUint8List();
 
-    var decoded = encoding != 'utf-8'
-        ? decodeUtf16le(buffer, pos(), length)
-        : decodeUtf8(buffer, pos(), length);
-    
-    posStack[0] += length;
+      var decoded = encoding != 'utf-8'
+          ? decodeUtf16le(buffer, pos(), length)
+          : decodeUtf8(buffer, pos(), length);
+      
+      posStack[0] += length;
 
-    return decoded;
+      return decoded;
+    } catch (e) {
+      print('Warning: Unable to parse, $e at $encoding, $posStack, $binaryData. Ignoring.');
+      return '';
+    }
   }
 
   /// Reads a byte array of the specified length from the buffer.

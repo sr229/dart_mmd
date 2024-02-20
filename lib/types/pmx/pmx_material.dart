@@ -66,8 +66,8 @@ class PMXMaterial {
   /// The [encoding] specifies the character encoding used in the PMX file.
   /// The [textureIndexSize] specifies the size of the texture index in bytes.
   PMXMaterial(BufferReader reader, String encoding, int textureIndexSize) {
-    name = value['name'] = reader.readTextBuffer(encoding).toString();
-    englishName = value['name_en'] = reader.readTextBuffer(encoding).toString();
+    name = value['name'] = reader.readTextBuffer(encoding);
+    englishName = value['name_en'] = reader.readTextBuffer(encoding);
     diffuse = value['diffuse'] = reader.readFloat4();
     specular = value['specular'] = reader.readFloat3();
     specularMod = value['specular_mod'] = reader.readFloat();
