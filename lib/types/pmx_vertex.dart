@@ -31,7 +31,7 @@ class PMXVertex {
   late final int type;
 
   /// The bones affecting the vertex.
-  late final List<dynamic> bones;
+  List<dynamic> bones = [];
 
   /// The weights of the vertex.
   late final List<double> weights;
