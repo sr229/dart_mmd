@@ -9,7 +9,7 @@ import 'package:utf_convert/utf_convert.dart';
 ///
 /// Source: https://github.com/kanryu/pmx/blob/master/pmx.ts
 class BufferReader {
-  final List<int> _posStack = [0];
+  final List<int> _posStack = [];
   late final Uint8List binaryData;
 
   /// Create a new BufferReader from a ByteBuffer.
@@ -97,6 +97,11 @@ class BufferReader {
   ///
   String readTextBuffer(String encoding) {
     var length = readInt();
+
+    // length can go larger than the byte array, make sure to clamp it
+    if (length > binaryData.length) {
+      length = binaryData.length - pos();
+    }
 
     var decoded = encoding != 'utf-8'
         ? decodeUtf16le(binaryData, pos(), length)
