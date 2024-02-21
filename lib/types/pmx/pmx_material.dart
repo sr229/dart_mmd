@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:dart_mmd/utils/buffer_reader.dart';
 
 /// Represents a Material in a Polygon Model eXtended model.
-/// Source: https://gist.github.com/felixjones/5f4479c9c9d1682b2f3a
+/// Source: https://gist.github.com/felixjones/f8a06bd48f9da9a4539f
 ///
 /// This is originally ported from a TypeScript version of the library.
 /// Source: https://github.com/kanryu/pmx/blob/master/pmx.ts#L240
