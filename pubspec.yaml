@@ -11,3 +11,4 @@ dev_dependencies:
   test: ^1.24.0
 dependencies:
   utf_convert: ^0.10.0+1
+  vector_math: ^2.1.4
