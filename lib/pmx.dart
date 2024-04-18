@@ -68,7 +68,7 @@ class PMX {
     var morphIndexSize = reader.readByte();
     push(morphIndexSize);
 
-    reader.pushPos(17);
+    reader.pushStack(17);
 
     var model = reader.readTextBuffer(encoding);
     var modelEnglish = reader.readTextBuffer(encoding);

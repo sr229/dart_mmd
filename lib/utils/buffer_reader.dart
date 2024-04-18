@@ -9,35 +9,41 @@ import 'package:utf_convert/utf_convert.dart';
 ///
 /// Source: https://github.com/kanryu/pmx/blob/master/pmx.ts
 class BufferReader {
-  final List<int> _posStack = [0];
-  late final Uint8List _binaryData;
+  var _posStack = [0];
+  late final ByteBuffer _buffer;
 
   /// Create a new BufferReader from a ByteBuffer.
   /// [buffer] is the buffer to read from.
   /// [pos] is the initial position to start reading from.
   BufferReader(ByteBuffer buffer, [int pos = 0]) {
-    _binaryData = buffer.asUint8List();
-    _posStack.insert(0, pos);
+    _buffer = buffer;
+    _posStack = [0];
+
+    if (pos != 0) _posStack[0] = pos;
   }
 
   /// Push a new position onto the stack.
   /// [pos] is the position to push.
-  void pushPos(int pos) {
+  void pushStack(int pos) {
     _posStack.insert(0, pos);
   }
 
   /// Pop a position from the stack.
-  int popPos() {
-    return _posStack.removeAt(0);
+  void popStack() {
+    var result = _posStack.removeAt(0);
+    
+    if (_posStack.isEmpty) {
+      _posStack[0] = result;
+    }
   }
 
   /// Get the current position.
-  int pos() {
+  int stackPos() {
     return _posStack[0];
   }
 
   /// Move the current position ahead by [size].
-  int ahead(int size) {
+  int stackAhead(int size) {
     var result = _posStack[0];
     _posStack[0] += size;
     return result;
@@ -46,22 +52,23 @@ class BufferReader {
   /// Read a byte from the buffer.
   int readByte() {
     // read a byte from the buffer
-    return ByteData.view(_binaryData.buffer).getUint8(1);
+    return ByteData.view(_buffer).getUint8(stackAhead(1));
   }
 
   /// Read a short from the buffer.
   int readShort() {
-    return ByteData.view(_binaryData.buffer).getInt16(2, Endian.little);
+    return ByteData.view(_buffer).getInt16(stackAhead(2), Endian.little);
   }
 
   /// Read an integer from the buffer.
   int readInt() {
-    return ByteData.view(_binaryData.buffer).getInt32(4, Endian.little);
+    // in the original code this is readUInt32LE. Let's use the Dart equivalent.
+    return ByteData.view(_buffer).getInt32(stackAhead(4), Endian.little);
   }
 
   /// Read a float from the buffer.
   double readFloat() {
-    return ByteData.view(_binaryData.buffer).getFloat32(4, Endian.little);
+    return ByteData.view(_buffer).getFloat32(stackAhead(4), Endian.little);
   }
 
   /// Reads a float array from the buffer.
@@ -100,13 +107,13 @@ class BufferReader {
     var length = readInt();
 
     // length can go larger than the byte array, make sure to clamp it
-    if (length > _binaryData.length) {
-      length = _binaryData.length - pos();
+    if (length > _buffer.lengthInBytes) {
+      length = _buffer.lengthInBytes - stackPos();
     }
 
     var decoded = encoding != 'utf-8'
-        ? decodeUtf16le(_binaryData, pos(), length)
-        : decodeUtf8(_binaryData, pos(), length);
+        ? decodeUtf16le(_buffer.asUint8List(), stackPos(), length)
+        : decodeUtf8(_buffer.asUint8List(), stackPos(), length);
 
     _posStack[0] += length;
 
