@@ -9,14 +9,14 @@ import 'package:utf_convert/utf_convert.dart';
 ///
 /// Source: https://github.com/kanryu/pmx/blob/master/pmx.ts
 class BufferReader {
-  final List<int> _posStack = [];
-  late final Uint8List binaryData;
+  final List<int> _posStack = [0];
+  late final Uint8List _binaryData;
 
   /// Create a new BufferReader from a ByteBuffer.
   /// [buffer] is the buffer to read from.
   /// [pos] is the initial position to start reading from.
   BufferReader(ByteBuffer buffer, [int pos = 0]) {
-    binaryData = buffer.asUint8List();
+    _binaryData = buffer.asUint8List();
     _posStack.insert(0, pos);
   }
 
@@ -45,22 +45,23 @@ class BufferReader {
 
   /// Read a byte from the buffer.
   int readByte() {
-    return binaryData[_posStack[0]++];
+    // read a byte from the buffer
+    return ByteData.view(_binaryData.buffer).getUint8(1);
   }
 
   /// Read a short from the buffer.
   int readShort() {
-    return ByteData.view(binaryData.buffer).getInt16(ahead(2), Endian.little);
+    return ByteData.view(_binaryData.buffer).getInt16(2, Endian.little);
   }
 
   /// Read an integer from the buffer.
   int readInt() {
-    return ByteData.view(binaryData.buffer).getInt32(ahead(4), Endian.little);
+    return ByteData.view(_binaryData.buffer).getInt32(4, Endian.little);
   }
 
   /// Read a float from the buffer.
   double readFloat() {
-    return ByteData.view(binaryData.buffer).getFloat32(ahead(4), Endian.little);
+    return ByteData.view(_binaryData.buffer).getFloat32(4, Endian.little);
   }
 
   /// Reads a float array from the buffer.
@@ -99,13 +100,13 @@ class BufferReader {
     var length = readInt();
 
     // length can go larger than the byte array, make sure to clamp it
-    if (length > binaryData.length) {
-      length = binaryData.length - pos();
+    if (length > _binaryData.length) {
+      length = _binaryData.length - pos();
     }
 
     var decoded = encoding != 'utf-8'
-        ? decodeUtf16le(binaryData, pos(), length)
-        : decodeUtf8(binaryData, pos(), length);
+        ? decodeUtf16le(_binaryData, pos(), length)
+        : decodeUtf8(_binaryData, pos(), length);
 
     _posStack[0] += length;
 
