@@ -1,0 +1,4 @@
+enum PMXMorphMaterialMethod {
+  mul,
+  add
+}

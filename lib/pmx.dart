@@ -1,170 +1,170 @@
 library dart_mmd;
 
-import 'dart:typed_data';
-
+import 'package:dart_mmd/types/pmx/enums/bone_weight_deform_type.dart';
 import 'package:dart_mmd/types/pmx/pmx_bone.dart';
-import 'package:dart_mmd/types/pmx/pmx_face.dart';
-import 'package:dart_mmd/types/pmx/pmx_frame.dart';
+import 'package:dart_mmd/types/pmx/pmx_entry.dart';
 import 'package:dart_mmd/types/pmx/pmx_joint.dart';
 import 'package:dart_mmd/types/pmx/pmx_material.dart';
 import 'package:dart_mmd/types/pmx/pmx_morph.dart';
 import 'package:dart_mmd/types/pmx/pmx_rigidbody.dart';
+import 'package:dart_mmd/types/pmx/pmx_texture.dart';
 import 'package:dart_mmd/types/pmx/pmx_vertex.dart';
-import 'package:dart_mmd/utils/buffer_reader.dart';
+import 'package:dart_mmd/utils/binary_reader.dart';
+import 'package:vector_math/vector_math.dart';
+import 'package:vector_math/vector_math_lists.dart';
 
-/// Represents a Polygon Model eXtended model.
-///
-/// The [PMX] class is responsible for parsing and storing the data of a PMX model file.
-/// It provides methods to access and manipulate the model's vertices, faces, textures, materials, bones, morphs, frames, rigid bodies, and joints.
-///
-/// Example usage:
-/// ```dart
-/// var buffer = ...; // Provide the PMX model file buffer
-/// var model = PMX(buffer, (err, data) {
-///   if (err != null) {
-///     // Handle error
-///   } else {
-///     // Access and manipulate the model data
-///   }
-/// });
-/// ```
-class PMX {
-  List<dynamic> log = [];
-  Map<String, dynamic> value = {};
+class PMXFormat {
+  bool? ready;
 
-  /// Creates a new instance of the [PMX] class.
-  ///
-  /// The [buffer] parameter is the byte buffer containing the PMX model data.
-  /// The [callback] parameter is a function that will be called when the model data is parsed.
-  /// It takes an [Error] object as the first parameter (or `null` if no error occurred) and the parsed model data as the second parameter.
-  PMX(ByteBuffer buffer, Function(Error err, dynamic data) callback) {
-    push(buffer.toString());
+  String? name;
+  String? nameEn;
+  String? description;
+  String? descriptionEn;
 
-    var reader = BufferReader(buffer, 4);
-    var version = reader.readFloat();
-    var headerSize = reader.readByte();
-    push(version);
-    push(headerSize);
+  List<PMXVertex>? vertices;
+  List<int>? triangleIndexes;
+  List<PMXTexture> textures = List<PMXTexture>.empty();
+  List<PMXMaterial> materials = List<PMXMaterial>.empty();
+  List<PMXBone> bones = List<PMXBone>.empty();
+  List<PMXMorph> morphs = List<PMXMorph>.empty();
+  List<PMXEntry> entries = List<PMXEntry>.empty();
+  List<PMXRigidBody> rigidBodies = List<PMXRigidBody>.empty();
+  List<PMXJoint> joints = List<PMXJoint>.empty();
 
-    var encodingID = reader.readByte();
-    var encoding = encodingID == 0 ? 'utf-16le' : 'utf-8';
-    push(encoding);
+  static PMXFormat load(BinaryReader reader) {
+    PMXFormat format = PMXFormat();
+    format.reload(reader);
+    return format;
+  }
 
-    var additionalUV = reader.readByte();
-    push(additionalUV);
+  void reload(BinaryReader reader) {
+    // clear the lists
+    vertices = List<PMXVertex>.empty();
+    triangleIndexes = List<int>.empty();
+    textures = List<PMXTexture>.empty();
+    materials = List<PMXMaterial>.empty();
+    bones = List<PMXBone>.empty();
 
-    var vertexIndexSize = reader.readByte();
-    push(vertexIndexSize);
+    int fileHeader = reader.readInt32();
 
-    var textureIndexSize = reader.readByte();
-    push(textureIndexSize);
-
-    var materialSize = reader.readByte();
-    push(materialSize);
-
-    var boneIndexSize = reader.readByte();
-    push(boneIndexSize);
-
-    var morphIndexSize = reader.readByte();
-    push(morphIndexSize);
-
-    reader.pushStack(17);
-
-    var model = reader.readTextBuffer(encoding);
-    var modelEnglish = reader.readTextBuffer(encoding);
-    var comment = reader.readTextBuffer(encoding);
-    var commentEnglish = reader.readTextBuffer(encoding);
-    var vertexLength = reader.readInt();
-
-    push("modelname", val: model);
-    push("modelname_en", val: modelEnglish);
-    push("comment", val: comment);
-    push("comment_en", val: commentEnglish);
-    push("VertexLen", val: vertexLength);
-
-    // vertices
-    var vertices = [];
-    for (var i = 0; i < vertexLength; i++) {
-      var vertex = PMXVertex(reader, additionalUV, boneIndexSize);
-      vertices.add(vertex);
-    }
-    push("vertex", val: vertices);
-
-    // faces
-    var faceLength = reader.readInt();
-    var faces = [];
-    push("face", val: faceLength);
-    for (var i = 0; i < faceLength / 3; i++) {
-      var face = PMXFace(reader, vertexIndexSize);
-      faces.add(face);
-    }
-    push("face", val: faces);
-
-    // materials
-    var materialLength = reader.readInt();
-    var materials = [];
-    for (var i = 0; i < materialLength; i++) {
-      var material = PMXMaterial(reader, encoding, textureIndexSize);
-      var m = material.value;
-      materials.add(m);
-    }
-    push("material", val: materials);
-
-    // bones
-    var boneLength = reader.readInt();
-    var bones = [];
-    for (var i = 0; i < boneLength; i++) {
-      var bone = PMXBone(reader, encoding, boneIndexSize);
-      var b = bone.value;
-      bones.add(b);
+    if (fileHeader != 0x20584D50) {
+      throw Exception("Error: file is not a PMX file");
     }
 
-    // morphs
-    var morphLength = reader.readInt();
-    var morphs = [];
-    for (var i = 0; i < morphLength; i++) {
-      var morph = PMXMorph(reader, encoding, vertexIndexSize, materialSize,
-          boneIndexSize, morphIndexSize);
-      var m = morph.value;
-      morphs.add(m);
-    }
+    // in the original codebase, these ints were bytes
+    // however in Dart, bytes are interopable with the int datatype
+    // so we can assume all bytes are ints
+    double version = reader.readFloat32();
+    int flagsSize = reader.readByte(); // currently useless
 
-    // frames
-    var frameLength = reader.readInt();
-    var frames = [];
-    for (var i = 0; i < frameLength; i++) {
-      var frame = PMXFrame(reader, encoding, boneIndexSize, morphIndexSize);
-      var f = frame.value;
-      frames.add(f);
-    }
+    bool isUtf8Encoding = reader.readByte() == 1;
+    int extraUvNumber = reader.readByte();
+    int vertexIndexSize = reader.readByte();
+    int textureIndexSize = reader.readByte();
+    int materialindexSize = reader.readByte();
+    int boneIndexSize = reader.readByte();
+    int morphIndexSize = reader.readByte();
+    int rigidBodyIndexSize = reader.readByte();
 
-    // RigidBodies
-    var rigidBodyLength = reader.readInt();
-    var rigidBodies = [];
-    for (var i = 0; i < rigidBodyLength; i++) {
-      var rigidBody = PMXRigidBody(reader, encoding, boneIndexSize);
-      var r = rigidBody.value;
-      rigidBodies.add(r);
-    }
+    var encoding = isUtf8Encoding ? "utf8" : "utf16-le";
 
-    // Joints
-    var jointLength = reader.readInt();
-    var joints = [];
-    for (var i = 0; i < jointLength; i++) {
-      var joint = PMXJoint(reader, encoding);
-      var j = joint.value;
-      joints.add(j);
+    name = reader.readString();
+    nameEn = reader.readString();
+    description = reader.readString();
+    descriptionEn = reader.readString();
+
+    int vertexCount = reader.readInt32();
+    
+    vertices = List<PMXVertex>.filled(vertexCount, PMXVertex());
+    for (int i = 0; i < vertexCount; i++) {
+      var vertex = vertices![i];
+
+      vertex.coordinate = _readVector3XInv(reader);
+      vertex.normal = _readVector3(reader);
+      vertex.uvCoordinate = _readVector2(reader);
+
+      if (extraUvNumber > 0) {
+        vertex.extraUvCoordinates = Vector4List(extraUvNumber);
+        for (int j = 0; j < extraUvNumber; j++) {
+          vertex.extraUvCoordinates![j] = _readVector4(reader);
+        }
+      }
+
+      int skinningType = reader.readByte();
+
+      switch(PMXBoneWeightDeformType.values[skinningType]) {
+        case PMXBoneWeightDeformType.BDEF1:
+          vertex.boneID0 = _readIndex(reader, boneIndexSize);
+          vertex.boneID1 = -1;
+          vertex.boneID2 = -1;
+          vertex.boneID3 = -1;
+          vertex.weights![i].x = 1;
+          break;
+        case PMXBoneWeightDeformType.BDEF2:
+          vertex.boneID0 = _readIndex(reader, boneIndexSize);
+          vertex.boneID1 = _readIndex(reader, boneIndexSize);
+          vertex.boneID2 = -1;
+          vertex.boneID3 = -1;
+          vertex.weights![i].x = 1;
+          vertex.weights![i].y = 1.0 - vertex.weights![i].x;
+          break;
+        case PMXBoneWeightDeformType.BDEF4:
+          vertex.boneID0 = _readIndex(reader, boneIndexSize);
+          vertex.boneID1 = _readIndex(reader, boneIndexSize);
+          vertex.boneID2 = _readIndex(reader, boneIndexSize);
+          vertex.boneID3 = _readIndex(reader, boneIndexSize);
+          vertex.weights = Vector4List.fromList([_readVector4(reader)]);
+          break;
+        case  PMXBoneWeightDeformType.SDEF:
+          vertex.boneID0 = _readIndex(reader, boneIndexSize);
+          vertex.boneID1 = _readIndex(reader, boneIndexSize);
+          vertex.boneID2 = -1;
+          vertex.boneID3 = -1;
+          vertex.weights![i].x = reader.readSingle();
+          vertex.weights![i].y = 1.0 - vertex.weights![i].x;
+          _readVector3(reader);
+          _readVector3(reader);
+          _readVector3(reader);
+          break;
+        default:
+          throw Exception("Error: unknown skinning type");
+      }
+      vertex.edgeScale = reader.readSingle();
     }
   }
 
-  void push(dynamic key, {dynamic val, bool assigned = true}) {
-    if (val == null) {
-      log.add(val);
-    } else {
-      if (assigned)  {
-        value[key] = val;
-      }
-      log.add([key, val]);
-    }
+  int _readIndex(BinaryReader reader, int size) {
+    if (size == 1) reader.readSByte();
+    if (size == 2) reader.readInt16();
+
+    return reader.readInt32();
+  }
+
+  /// Reads a single vertex from the binary file
+  Vector2 _readVector2(BinaryReader reader) {
+    return Vector2(reader.readSingle(), reader.readSingle());
+  }
+
+  /// Reads a single vertex from the binary file
+  Vector3 _readVector3(BinaryReader reader) {
+    return Vector3(reader.readSingle(), reader.readSingle(), reader.readSingle());
+  }
+
+  /// Reads a single vertex from the binary file, x inverted
+  Vector3 _readVector3XInv(BinaryReader reader) {
+    return Vector3(-reader.readSingle(), reader.readSingle(), reader.readSingle());
+  }
+
+  /// Reads a single vertex from the binary file, y and z inverted
+  Vector3 _readVector3YZInv(BinaryReader reader) {
+    return Vector3(reader.readSingle(), -reader.readSingle(), -reader.readSingle());
+  }
+
+  Vector4 _readVector4(BinaryReader reader) {
+    return Vector4(reader.readSingle(), reader.readSingle(), reader.readSingle(), reader.readSingle());
+  }
+
+  Quaternion _readQuaternion(BinaryReader reader) {
+    return Quaternion(reader.readSingle(), reader.readSingle(), reader.readSingle(), reader.readSingle());
   }
 }
