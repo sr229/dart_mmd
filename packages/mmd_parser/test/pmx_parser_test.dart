@@ -12,7 +12,7 @@ void main() {
         expect(d, isNotNull);
         expect(d is PMX, isTrue);
       } catch (e) {
-        print(e);
+        rethrow;
       }
     });
     expect(model, isNotNull);

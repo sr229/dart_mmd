@@ -9,3 +9,13 @@ command:
     environment:
       sdk: '>=3.1.0 <4.0.0'
       flutter: '>=3.19.6'
+
+scripts:
+  # collect coverage information for all packages
+  coverage: >
+    melos exec -c 1 --fail-fast --dir-exists=test -- \
+      fvm dart test --coverage && melos run coverage:cleanup
+  # run test for the parset
+  test: >
+    melos exec -c 1 --fail-fast --dir-exists=test -- \
+      cd packages/mmd_parser && dart test
