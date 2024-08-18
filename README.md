@@ -1,6 +1,12 @@
-## dart_mmd - Read PMX/PMD files in Dart
+## dart_mmd
 
-This is a Dart package to read PMX/PMD files. PMX and PMD are file formats used by MikuMikuDance, a 3D animation software.
+A set of utilities to read MikuMikuDance formats for Flutter and Dart projects. Includes a reference implementation of an application that can load and display MMD models and sequences.
+
+## Developing
+
+You need the [FVM](https://fvm.app/) tool to manage the Flutter SDK version. After installing it, run `fvm install` to install the correct version of the Flutter SDK.
+
+The parser doesn't need a full Flutter installation, so you can run the tests with `dart test` or `flutter test`.
 
 ## Project Status
 

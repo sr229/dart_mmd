@@ -1,0 +1,11 @@
+name: dart_mmd
+sdkPath: .fvm/flutter_sdk
+
+packages:
+  - packages/**
+
+command:
+  bootstrap:
+    environment:
+      sdk: '>=3.1.0 <4.0.0'
+      flutter: '>=3.19.6'

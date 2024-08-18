@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Flutter Run -&gt; 'mmd_viewer'" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="filePath" value="$PROJECT_DIR$/packages\\mmd_viewer\lib\main.dart" />
+    <method v="2" />
+  </configuration>
+</component>

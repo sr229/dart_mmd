@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/packages/mmd_parser/melos_dart_mmd_parser.iml" filepath="$PROJECT_DIR$/packages/mmd_parser/melos_dart_mmd_parser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/mmd_viewer/melos_mmd_viewer.iml" filepath="$PROJECT_DIR$/packages/mmd_viewer/melos_mmd_viewer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/melos_dart_mmd.iml" filepath="$PROJECT_DIR$/melos_dart_mmd.iml" />
+    </modules>
+  </component>
+</project>

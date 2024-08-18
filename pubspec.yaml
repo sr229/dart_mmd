@@ -1,13 +1,10 @@
 name: dart_mmd
-description: A PMX/VMD parser for Dart.
-version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+description: Tools and Utilities for parsing and viewing MikuMikuDance formats.
+version: 0.0.1
+repository: https://github.com/sr229/dart_mmd
 
 environment:
-  sdk: ^3.2.6
+  sdk: '>=3.1.0 <4.0.0'
 
 dev_dependencies:
-  lints: ^3.0.0
-  test: ^1.24.0
-dependencies:
-  utf_convert: ^0.10.0+1
+  melos: ^6.1.0
