@@ -9,11 +9,18 @@
     // see: https://github.com/devcontainers-community/features-dart-sdk/issues/3
     "ghcr.io/devcontainers-contrib/features/bash-command:1": {
       "command": "sudo apt-get install apt-transport-https && wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo gpg  --dearmor -o /usr/share/keyrings/dart.gpg; echo 'deb [signed-by=/usr/share/keyrings/dart.gpg arch=amd64] https://storage.googleapis.com/download.dartlang.org/linux/debian stable main' | sudo tee /etc/apt/sources.list.d/dart_stable.list; sudo apt-get update && sudo apt-get install dart"
+    },
+    // initialise FVM and melos
+    "ghcr.io/devcontainers-contrib/features/bash-command:1": {
+      "command": "bash ./.idx/bootstrap.sh"
+    },
+    "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+      "packages" : "curl, clang, cmake, ninja-build, pkg-config, libgtk-3-dev, liblzma-dev, libstdc++-12-dev, build-essential, xz-utils, zip, libglu1-mesa"
     }
   },
   "customizations": {
     "vscode": {
-      "extensions": ["Dart-Code.dart-code"]
+      "extensions": ["Dart-Code.dart-code", "Dart-Code.flutter"]
     }
   }
 }
