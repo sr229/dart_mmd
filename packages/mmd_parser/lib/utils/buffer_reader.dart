@@ -99,9 +99,10 @@ class BufferReader {
   String readTextBuffer(String encoding) {
     var length = readInt();
 
-    // length can go larger than the byte array, make sure to clamp it
-    if (length > binaryData.length) {
-      length = binaryData.length - pos();
+    // Clamp length to remaining bytes from current position
+    int remaining = binaryData.length - pos();
+    if (length > remaining) {
+      length = remaining;
     }
 
     var decoded = encoding != 'utf-8'
