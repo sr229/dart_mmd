@@ -27,7 +27,7 @@ jobs:
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
         with:
-          sdk: '3.1.0'
+          sdk: '3.2.x'
       
       - name: Get dependencies
         working-directory: packages/mmd_parser
