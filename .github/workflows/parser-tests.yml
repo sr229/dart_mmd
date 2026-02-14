@@ -24,14 +24,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Setup Dart
-        uses: dart-lang/setup-dart@v1
-        with:
-          sdk: '3.11'
+      - name: Setup FVM
+        uses: kuhnroyal/flutter-fvm-config-action@v2
       
-      - name: Get dependencies
-        working-directory: packages/mmd_parser
-        run: dart pub get
+      - name: Install Flutter using FVM
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+      
+      - name: Install Melos
+        run: dart pub global activate melos
+      
+      - name: Bootstrap packages with Melos
+        run: melos bootstrap
       
       - name: Verify formatting
         working-directory: packages/mmd_parser
