@@ -161,7 +161,7 @@ class PMX {
     if (val == null) {
       log.add(val);
     } else {
-      if (assigned)  {
+      if (assigned) {
         value[key] = val;
       }
       log.add([key, val]);

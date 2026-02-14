@@ -9,23 +9,23 @@ import '../../utils/buffer_reader.dart';
 /// This is originally ported from a TypeScript version of the library.
 /// Source: https://github.com/kanryu/pmx/blob/master/pmx.ts#L526
 class PMXFrame {
-    /// The name of the frame.
-    late String name;
+  /// The name of the frame.
+  late String name;
 
-    /// The English name of the frame.
-    late String englishName;
+  /// The English name of the frame.
+  late String englishName;
 
-    /// The flag of the frame.
-    late int flag;
+  /// The flag of the frame.
+  late int flag;
 
-    /// The inner count of the frame.
-    late int innerCount;
+  /// The inner count of the frame.
+  late int innerCount;
 
-    /// The inner data of the frame.
-    late List<dynamic> innerData;
+  /// The inner data of the frame.
+  late List<dynamic> innerData;
 
-    /// The value of the frame.
-    final Map<String, dynamic> value = {};
+  /// The value of the frame.
+  final Map<String, dynamic> value = {};
 
   /// Constructs a PMXFrame object by reading data from the provided [reader].
   /// The [encoding] parameter specifies the character encoding used for reading text buffers.
@@ -35,7 +35,8 @@ class PMXFrame {
     // 4 + n : TextBuf	| Frame name
     name = value['name'] = reader.readTextBuffer(encoding).toString();
     // 4 + n : TextBuf	| English frame name
-    englishName = value['english_name'] = reader.readTextBuffer(encoding).toString();
+    englishName =
+        value['english_name'] = reader.readTextBuffer(encoding).toString();
     // 1  : byte	| Special frame flag - 0: Normal frame 1: Special frame
     flag = value['flag'] = reader.readByte();
     innerCount = value['inner_count'] = reader.readInt();

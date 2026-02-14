@@ -1,0 +1,68 @@
+name: Parser Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'packages/mmd_parser/**'
+      - '.github/workflows/parser-tests.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'packages/mmd_parser/**'
+      - '.github/workflows/parser-tests.yml'
+
+jobs:
+  test:
+    name: Test Parser
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup FVM
+        uses: kuhnroyal/flutter-fvm-config-action@v2
+      
+      - name: Install Flutter using FVM
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+      
+      - name: Install Melos
+        run: dart pub global activate melos
+      
+      - name: Bootstrap packages with Melos
+        run: melos bootstrap
+      
+      - name: Verify formatting
+        working-directory: packages/mmd_parser
+        run: dart format --output=none --set-exit-if-changed .
+      
+      - name: Analyze code
+        working-directory: packages/mmd_parser
+        run: dart analyze --fatal-infos
+      
+      - name: Run tests
+        working-directory: packages/mmd_parser
+        run: dart test
+      
+      - name: Check test coverage
+        working-directory: packages/mmd_parser
+        run: |
+          dart pub global activate coverage
+          dart test --coverage=coverage
+          dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --packages=.dart_tool/package_config.json --report-on=lib
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: packages/mmd_parser/coverage/lcov.info
+          flags: parser
+          name: parser-coverage
+        continue-on-error: true
