@@ -55,7 +55,6 @@ class BufferReader {
 
   /// Read a 32-bit integer from the buffer.
   int readInt() {
-
     return ByteData.view(binaryData.buffer).getInt32(ahead(4), Endian.little);
   }
 

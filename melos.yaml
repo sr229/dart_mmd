@@ -15,7 +15,7 @@ scripts:
   coverage: >
     melos exec -c 1 --fail-fast --dir-exists=test -- \
       fvm dart test --coverage && melos run coverage:cleanup
-  # run test for the parset
+  # run test for the parser
   test: >
     melos exec -c 1 --fail-fast --dir-exists=test -- \
       cd packages/mmd_parser && dart test

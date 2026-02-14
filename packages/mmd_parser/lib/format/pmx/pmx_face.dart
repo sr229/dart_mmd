@@ -3,7 +3,7 @@ library dart_mmd;
 import '../../utils/buffer_reader.dart';
 
 /// Represents a Polygon Model eXtended face.
-/// 
+///
 /// Source: https://gist.github.com/felixjones/f8a06bd48f9da9a4539f
 class PMXFace {
   List<int> value = [];
